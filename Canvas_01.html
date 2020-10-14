@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript">
+window.onload = function () {
+//initialize lists for temperature and humidity
+var temp = [];
+var hum = [];
+
+//parse in data from json file
+$.getJSON("data.json", function(data) {
+// for each data in the data file, store the index(x) and the value(Y) (both for temp and humidity) as (x, y) in their respective lists
+	$.each(data, function(key, value){
+		hum.push({x: key[0], y: value[1]});
+		temp.push({x: key[0], y: value[0]});
+	});
+//create a chart
+	var chart = new CanvasJS.Chart("chartContainer",{
+		title:{
+			text:"Plotting Temperature and Humidity"
+		},
+		// define x-axis
+		axisX: {
+		title: "Recordings in 1/2 hour increments during the day"
+		},
+// set temperature and humidity as two separate y-axis' with different colors
+		axisY:[ {
+		title: "Temperature",
+		lineColor: "#C24642",
+		tickColor: "#C24642",
+		labelFontColor: "#C24642",
+		titleFontColor: "#C24642",
+		suffix: "F"
+		},
+		{
+		title: "Humidity",
+		lineColor: "#369EAD",
+		tickColor: "#369EAD",
+		labelFontColor: "#369EAD",
+		titleFontColor: "#369EAD",
+		suffix: "%"
+		}],
+// create two lines, one for temp and one for humidity. set colors to match corresponding y axis
+		data: [{
+			type: "line",
+			name: "Temperature",
+			color: "#C24642",
+			dataPoints : temp,
+		},
+		{
+			type: "line",
+			name: "Humidity",
+			color: "#369EAD",
+			dataPoints : hum,
+		}
+		],
+
+
+	});
+	chart.render();
+});
+}
+</script>
+
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+</body>
+</html>
